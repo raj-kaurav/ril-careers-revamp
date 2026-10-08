@@ -23,6 +23,7 @@ type JobSearchContextValue = {
 const JobSearchContext = createContext<JobSearchContextValue | null>(null);
 
 export const SEARCH_STATUS_ID = "search-status";
+export const RESULTS_ID = "opportunity-results";
 
 export function JobSearchProvider({ children }: { children: ReactNode }) {
   const [draft, setDraft] = useState<JobSearchCriteria>(emptyCriteria);
@@ -49,7 +50,7 @@ export function JobSearchProvider({ children }: { children: ReactNode }) {
     const params = applyCriteriaToParams(new URLSearchParams(window.location.search), criteria);
     const query = params.toString();
     window.history.replaceState(null, "", `${window.location.pathname}${query ? `?${query}` : ""}#opportunities`);
-    requestAnimationFrame(() => scrollToId("opportunities", { focusId: SEARCH_STATUS_ID }));
+    requestAnimationFrame(() => scrollToId(RESULTS_ID, { focusId: SEARCH_STATUS_ID }));
   }, []);
 
   const clearSearch = useCallback(() => {

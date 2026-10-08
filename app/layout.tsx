@@ -1,11 +1,19 @@
 import type { Metadata, Viewport } from "next";
-import { Manrope } from "next/font/google";
+import { DM_Serif_Display, Inter } from "next/font/google";
 import { Providers } from "@/components/Providers";
 import { site } from "@/data/site";
 import "./globals.css";
 
-const manrope = Manrope({
-  variable: "--font-manrope",
+const dmSerif = DM_Serif_Display({
+  variable: "--font-dm-serif",
+  subsets: ["latin"],
+  weight: "400",
+  style: ["normal", "italic"],
+  display: "swap",
+});
+
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
   display: "swap",
 });
@@ -13,17 +21,17 @@ const manrope = Manrope({
 export const metadata: Metadata = {
   title: site.conceptLabel,
   description:
-    "Discover careers across Reliance — digital, retail, energy, new energy, media and corporate functions. A homepage design concept.",
+    "There is more than one way to build the future. An editorial homepage concept for careers across Reliance.",
   robots: { index: false, follow: false },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#171a4a",
+  themeColor: "#f7f5ef",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en-IN" className={`${manrope.variable} antialiased`}>
+    <html lang="en-IN" className={`${dmSerif.variable} ${inter.variable} antialiased`}>
       <body className="min-h-dvh overflow-x-clip">
         <Providers>{children}</Providers>
       </body>

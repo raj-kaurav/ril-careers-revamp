@@ -1,11 +1,12 @@
-import { businesses, getBusiness, type BusinessId } from "@/data/businesses";
+import type { DemoJob } from "@/data/jobs";
+import { getWorld, isWorldId, worlds, type WorldId } from "@/data/worlds";
 
-export type BusinessFilter = "all" | BusinessId;
+export type WorldFilter = "all" | WorldId;
 
 export type JobSearchCriteria = {
   keywords: string;
   location: string;
-  business: BusinessFilter;
+  world: WorldFilter;
 };
 
 /** Contract for the future jobs/ATS integration. The prototype ships no implementation. */
@@ -13,25 +14,21 @@ export interface JobSearchService {
   search(criteria: JobSearchCriteria): Promise<{ total: number; jobs: unknown[] }>;
 }
 
-export const emptyCriteria: JobSearchCriteria = { keywords: "", location: "", business: "all" };
+export const emptyCriteria: JobSearchCriteria = { keywords: "", location: "", world: "all" };
 
-export const businessOptions: { value: BusinessFilter; label: string }[] = [
-  { value: "all", label: "All Businesses" },
-  ...businesses.map((business) => ({ value: business.id, label: business.name })),
+export const worldOptions: { value: WorldFilter; label: string }[] = [
+  { value: "all", label: "any world" },
+  ...worlds.map((world) => ({ value: world.id, label: world.name })),
 ];
 
-const PARAM = { keywords: "q", location: "location", business: "business" } as const;
-
-function isBusinessFilter(value: string | null): value is BusinessFilter {
-  return value === "all" || businesses.some((business) => business.id === value);
-}
+const PARAM = { keywords: "q", location: "location", world: "world" } as const;
 
 export function criteriaFromParams(params: URLSearchParams): JobSearchCriteria {
-  const business = params.get(PARAM.business);
+  const world = params.get(PARAM.world);
   return {
     keywords: params.get(PARAM.keywords)?.trim() ?? "",
     location: params.get(PARAM.location)?.trim() ?? "",
-    business: isBusinessFilter(business) ? business : "all",
+    world: isWorldId(world) ? world : "all",
   };
 }
 
@@ -40,7 +37,7 @@ export function applyCriteriaToParams(params: URLSearchParams, criteria: JobSear
   const entries: [string, string][] = [
     [PARAM.keywords, criteria.keywords.trim()],
     [PARAM.location, criteria.location.trim()],
-    [PARAM.business, criteria.business === "all" ? "" : criteria.business],
+    [PARAM.world, criteria.world === "all" ? "" : criteria.world],
   ];
   for (const [key, value] of entries) {
     if (value) next.set(key, value);
@@ -50,13 +47,30 @@ export function applyCriteriaToParams(params: URLSearchParams, criteria: JobSear
 }
 
 export function hasCriteria(criteria: JobSearchCriteria) {
-  return Boolean(criteria.keywords.trim() || criteria.location.trim() || criteria.business !== "all");
+  return Boolean(criteria.keywords.trim() || criteria.location.trim() || criteria.world !== "all");
 }
 
 export function describeCriteria(criteria: JobSearchCriteria): string[] {
   const parts: string[] = [];
   if (criteria.keywords.trim()) parts.push(`“${criteria.keywords.trim()}”`);
+  if (criteria.world !== "all") parts.push(getWorld(criteria.world)?.name ?? "");
   if (criteria.location.trim()) parts.push(criteria.location.trim());
-  parts.push(criteria.business === "all" ? "All businesses" : (getBusiness(criteria.business)?.name ?? ""));
   return parts.filter(Boolean);
+}
+
+/**
+ * Narrows the demo list in the browser so the interaction feels real.
+ * The live product would call a `JobSearchService` instead.
+ */
+export function filterDemoJobs(jobs: DemoJob[], criteria: JobSearchCriteria | null): DemoJob[] {
+  if (!criteria || !hasCriteria(criteria)) return jobs;
+  const keywords = criteria.keywords.trim().toLowerCase();
+  const location = criteria.location.trim().toLowerCase();
+  return jobs.filter((job) => {
+    if (criteria.world !== "all" && job.worldId !== criteria.world) return false;
+    if (location && !job.location.toLowerCase().includes(location)) return false;
+    if (!keywords) return true;
+    const haystack = [job.title, job.business, job.summary, ...job.skills].join(" ").toLowerCase();
+    return keywords.split(/\s+/).every((word) => haystack.includes(word));
+  });
 }

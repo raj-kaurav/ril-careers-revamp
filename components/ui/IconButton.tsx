@@ -14,8 +14,8 @@ export function IconButton({ label, children, className, tone = "light", type = 
       type={type}
       aria-label={label}
       className={cn(
-        "inline-flex size-11 shrink-0 items-center justify-center rounded-md transition-colors duration-200",
-        tone === "light" ? "text-primary hover:bg-primary/6" : "text-white hover:bg-white/10",
+        "inline-flex size-11 shrink-0 items-center justify-center rounded-full transition-colors duration-300",
+        tone === "light" ? "text-ink hover:bg-ink/6" : "text-ivory hover:bg-ivory/10",
         className,
       )}
       {...props}

@@ -1,30 +1,29 @@
-import { BusinessExplorer } from "@/components/businesses/BusinessExplorer";
-import { FinalCTA } from "@/components/cta/FinalCTA";
-import { EVPSection } from "@/components/evp/EVPSection";
-import { Footer } from "@/components/footer/Footer";
-import { Hero } from "@/components/hero/Hero";
-import { FeaturedJobs } from "@/components/jobs/FeaturedJobs";
-import { HowWeHire } from "@/components/jobs/HowWeHire";
+import { FinalManifesto } from "@/components/chapters/finale/FinalManifesto";
+import { ImpactStrip } from "@/components/chapters/impact/ImpactStrip";
+import { ManifestoHero } from "@/components/chapters/manifesto/ManifestoHero";
+import { CareerMoves } from "@/components/chapters/moves/CareerMoves";
+import { PeopleStories } from "@/components/chapters/people/PeopleStories";
+import { Possibility } from "@/components/chapters/possibility/Possibility";
+import { CareerWorlds } from "@/components/chapters/worlds/CareerWorlds";
+import { SiteFooter } from "@/components/footer/SiteFooter";
 import { JobSearchProvider } from "@/components/jobs/JobSearchProvider";
-import { Header } from "@/components/navigation/Header";
-import { CareerPathways } from "@/components/pathways/CareerPathways";
-import { EmployeeStories } from "@/components/stories/EmployeeStories";
+import { SiteHeader } from "@/components/navigation/SiteHeader";
 
+/** Variant 02 — the homepage read as seven chapters of one campaign. */
 export default function HomePage() {
   return (
     <JobSearchProvider>
-      <Header />
+      <SiteHeader />
       <main id="main" tabIndex={-1} className="focus:outline-none">
-        <Hero />
-        <BusinessExplorer />
-        <CareerPathways />
-        <EVPSection />
-        <EmployeeStories />
-        <FeaturedJobs />
-        <HowWeHire />
-        <FinalCTA />
+        <ManifestoHero />
+        <CareerWorlds />
+        <PeopleStories />
+        <CareerMoves />
+        <Possibility />
+        <ImpactStrip />
+        <FinalManifesto />
       </main>
-      <Footer />
+      <SiteFooter />
     </JobSearchProvider>
   );
 }
