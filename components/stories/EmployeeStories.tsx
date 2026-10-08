@@ -27,7 +27,7 @@ export function EmployeeStories() {
             intro="What does it feel like to work here? Hear it from the people building and transforming Reliance."
           />
           <ButtonLink
-            href="#why-reliance"
+            href="/#why-reliance"
             variant="secondary"
             icon={<ArrowRight className="size-5" />}
             className="hidden md:inline-flex"

@@ -6,7 +6,7 @@ import { StoryDialogButton } from "./StoryDialogButton";
 
 function IllustrativeTag() {
   return (
-    <span className="absolute top-4 left-4 rounded-sm bg-white px-2.5 py-1 text-body-sm font-semibold text-primary md:top-5 md:left-5">
+    <span className="absolute bottom-3 left-3 rounded-sm bg-primary-dark/65 px-2 py-0.5 text-[0.75rem] leading-5 font-medium text-white/90 backdrop-blur-sm md:bottom-4 md:left-4">
       Illustrative story
     </span>
   );

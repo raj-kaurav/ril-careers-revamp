@@ -17,33 +17,40 @@ export type SocialLink = {
   href: string;
 };
 
+/** Routes outside the homepage. Section links use `/#id` so they work from any page. */
+export const routes = {
+  home: "/",
+  jobs: "/jobs",
+  myCareers: "/my-careers",
+} as const;
+
 export const primaryNav: NavLink[] = [
-  { label: "Explore Careers", href: "#pathways" },
-  { label: "Businesses", href: "#businesses" },
-  { label: "Life at Reliance", href: "#life" },
-  { label: "Students & Graduates", href: "#students" },
-  { label: "How We Hire", href: "#how-we-hire" },
+  { label: "Explore Careers", href: "/#pathways" },
+  { label: "Businesses", href: "/#businesses" },
+  { label: "Life at Reliance", href: "/#life" },
+  { label: "Students & Graduates", href: "/#students" },
+  { label: "How We Hire", href: "/#how-we-hire" },
 ];
 
 export const footerColumns: FooterColumn[] = [
   {
     title: "Careers",
     links: [
-      { label: "Find Jobs", href: "#opportunities" },
-      { label: "Students & Graduates", href: "#students" },
-      { label: "Experienced Professionals", href: "#professionals" },
-      { label: "Leaders & Specialists", href: "#leaders" },
-      { label: "Life at Reliance", href: "#life" },
+      { label: "Find Jobs", href: routes.jobs },
+      { label: "Students & Graduates", href: "/#students" },
+      { label: "Experienced Professionals", href: "/#professionals" },
+      { label: "Leaders & Specialists", href: "/#leaders" },
+      { label: "Life at Reliance", href: "/#life" },
     ],
   },
   {
     title: "Explore",
     links: [
-      { label: "Businesses", href: "#businesses" },
-      { label: "Culture", href: "#why-reliance" },
-      { label: "Learning", href: "#why-reliance" },
-      { label: "Diversity & Inclusion", href: "#why-reliance" },
-      { label: "How We Hire", href: "#how-we-hire" },
+      { label: "Businesses", href: "/#businesses" },
+      { label: "Culture", href: "/#why-reliance" },
+      { label: "Learning", href: "/#why-reliance" },
+      { label: "Diversity & Inclusion", href: "/#why-reliance" },
+      { label: "How We Hire", href: "/#how-we-hire" },
     ],
   },
   {

@@ -1,62 +1,101 @@
-import { businesses, getBusiness, type BusinessId } from "@/data/businesses";
+import { businesses, getBusiness, isBusinessId, type BusinessId } from "@/data/businesses";
+import { careerStages, jobFunctions, type CareerStage, type JobFunction } from "@/data/jobs";
 
-export type BusinessFilter = "all" | BusinessId;
-
+/**
+ * Search criteria shared by the hero search, explorer CTAs and the /jobs
+ * results page. The URL is the source of truth, so every search is shareable
+ * and maps 1:1 onto a future HireSphere jobs query.
+ */
 export type JobSearchCriteria = {
-  keywords: string;
+  query: string;
   location: string;
-  business: BusinessFilter;
+  business: BusinessId | "all";
+  careerStage: CareerStage | "all";
+  jobFunction: JobFunction | "all";
 };
 
-/** Contract for the future jobs/ATS integration. The prototype ships no implementation. */
-export interface JobSearchService {
-  search(criteria: JobSearchCriteria): Promise<{ total: number; jobs: unknown[] }>;
-}
+export const emptyCriteria: JobSearchCriteria = {
+  query: "",
+  location: "",
+  business: "all",
+  careerStage: "all",
+  jobFunction: "all",
+};
 
-export const emptyCriteria: JobSearchCriteria = { keywords: "", location: "", business: "all" };
+export const PARAM = {
+  query: "query",
+  location: "location",
+  business: "business",
+  careerStage: "careerStage",
+  jobFunction: "function",
+} as const satisfies Record<keyof JobSearchCriteria, string>;
 
-export const businessOptions: { value: BusinessFilter; label: string }[] = [
+export const JOBS_PATH = "/jobs";
+
+export const businessOptions: { value: BusinessId | "all"; label: string }[] = [
   { value: "all", label: "All Businesses" },
   ...businesses.map((business) => ({ value: business.id, label: business.name })),
 ];
 
-const PARAM = { keywords: "q", location: "location", business: "business" } as const;
+const isCareerStage = (value: string | null): value is CareerStage =>
+  careerStages.some((stage) => stage.value === value);
+const isJobFunction = (value: string | null): value is JobFunction =>
+  jobFunctions.some((item) => item.value === value);
 
-function isBusinessFilter(value: string | null): value is BusinessFilter {
-  return value === "all" || businesses.some((business) => business.id === value);
-}
+type ParamReader = { get(name: string): string | null };
 
-export function criteriaFromParams(params: URLSearchParams): JobSearchCriteria {
+export function criteriaFromParams(params: ParamReader): JobSearchCriteria {
   const business = params.get(PARAM.business);
+  const careerStage = params.get(PARAM.careerStage);
+  const jobFunction = params.get(PARAM.jobFunction);
   return {
-    keywords: params.get(PARAM.keywords)?.trim() ?? "",
+    query: params.get(PARAM.query)?.trim() ?? "",
     location: params.get(PARAM.location)?.trim() ?? "",
-    business: isBusinessFilter(business) ? business : "all",
+    business: isBusinessId(business) ? business : "all",
+    careerStage: isCareerStage(careerStage) ? careerStage : "all",
+    jobFunction: isJobFunction(jobFunction) ? jobFunction : "all",
   };
 }
 
-export function applyCriteriaToParams(params: URLSearchParams, criteria: JobSearchCriteria) {
-  const next = new URLSearchParams(params);
-  const entries: [string, string][] = [
-    [PARAM.keywords, criteria.keywords.trim()],
-    [PARAM.location, criteria.location.trim()],
-    [PARAM.business, criteria.business === "all" ? "" : criteria.business],
-  ];
-  for (const [key, value] of entries) {
-    if (value) next.set(key, value);
-    else next.delete(key);
+export function criteriaToParams(criteria: Partial<JobSearchCriteria>) {
+  const params = new URLSearchParams();
+  for (const key of Object.keys(PARAM) as (keyof JobSearchCriteria)[]) {
+    const value = criteria[key]?.trim();
+    if (value && value !== "all") params.set(PARAM[key], value);
   }
-  return next;
+  return params;
 }
 
-export function hasCriteria(criteria: JobSearchCriteria) {
-  return Boolean(criteria.keywords.trim() || criteria.location.trim() || criteria.business !== "all");
+/** `/jobs?query=…&business=…` — the prototype stand-in for a HireSphere search. */
+export function jobsHref(criteria: Partial<JobSearchCriteria> = {}) {
+  const query = criteriaToParams(criteria).toString();
+  return query ? `${JOBS_PATH}?${query}` : JOBS_PATH;
 }
 
-export function describeCriteria(criteria: JobSearchCriteria): string[] {
-  const parts: string[] = [];
-  if (criteria.keywords.trim()) parts.push(`“${criteria.keywords.trim()}”`);
-  if (criteria.location.trim()) parts.push(criteria.location.trim());
-  parts.push(criteria.business === "all" ? "All businesses" : (getBusiness(criteria.business)?.name ?? ""));
-  return parts.filter(Boolean);
+export function jobHref(jobId: string) {
+  return `${JOBS_PATH}/${jobId}`;
+}
+
+export function applyHref(jobId: string) {
+  return `${JOBS_PATH}/${jobId}/apply`;
+}
+
+export function activeFilterCount(criteria: JobSearchCriteria) {
+  return [criteria.business, criteria.careerStage, criteria.jobFunction].filter((value) => value !== "all").length +
+    (criteria.location ? 1 : 0);
+}
+
+/** Human-readable chips describing the active search. */
+export function describeCriteria(criteria: JobSearchCriteria) {
+  const chips: { key: keyof JobSearchCriteria; label: string }[] = [];
+  if (criteria.query) chips.push({ key: "query", label: `“${criteria.query}”` });
+  if (criteria.location) chips.push({ key: "location", label: criteria.location });
+  if (criteria.business !== "all") chips.push({ key: "business", label: getBusiness(criteria.business)?.name ?? "" });
+  if (criteria.careerStage !== "all") {
+    chips.push({ key: "careerStage", label: careerStages.find((s) => s.value === criteria.careerStage)?.label ?? "" });
+  }
+  if (criteria.jobFunction !== "all") {
+    chips.push({ key: "jobFunction", label: jobFunctions.find((f) => f.value === criteria.jobFunction)?.label ?? "" });
+  }
+  return chips;
 }

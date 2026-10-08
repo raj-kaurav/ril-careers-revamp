@@ -1,12 +1,13 @@
 "use client";
 
 import { useEffect, useRef, type RefObject } from "react";
+import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
 import { ArrowRight, Search, UserRound, X } from "lucide-react";
 import { Wordmark } from "@/components/brand/Wordmark";
-import { Button } from "@/components/ui/Button";
+import { ButtonLink } from "@/components/ui/Button";
 import { IconButton } from "@/components/ui/IconButton";
-import { primaryNav } from "@/data/navigation";
+import { primaryNav, routes } from "@/data/navigation";
 import { easePremium } from "@/lib/motion";
 
 const FOCUSABLE = 'a[href], button:not([disabled]), input, select, textarea, [tabindex]:not([tabindex="-1"])';
@@ -16,15 +17,11 @@ export function MobileMenu({
   open,
   onClose,
   returnFocusRef,
-  onSearch,
-  onAccount,
 }: {
   id: string;
   open: boolean;
   onClose: () => void;
   returnFocusRef: RefObject<HTMLButtonElement | null>;
-  onSearch: () => void;
-  onAccount: () => void;
 }) {
   const panelRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
@@ -64,11 +61,6 @@ export function MobileMenu({
     };
   }, [open, onClose, returnFocusRef]);
 
-  const closeThen = (action?: () => void) => () => {
-    onClose();
-    if (action) requestAnimationFrame(action);
-  };
-
   return (
     <AnimatePresence>
       {open ? (
@@ -100,7 +92,7 @@ export function MobileMenu({
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.05 + index * 0.04, duration: 0.3, ease: easePremium }}
                 >
-                  <a
+                  <Link
                     href={item.href}
                     onClick={onClose}
                     className="group flex min-h-16 items-center justify-between py-3 text-[1.5rem] font-bold tracking-[-0.02em] text-primary"
@@ -110,24 +102,25 @@ export function MobileMenu({
                       className="size-5 text-accent-strong transition-transform group-hover:translate-x-1"
                       aria-hidden="true"
                     />
-                  </a>
+                  </Link>
                 </motion.li>
               ))}
             </ul>
           </nav>
 
           <div className="grid gap-3 border-t border-border bg-background-muted px-5 py-6 sm:grid-cols-2 sm:px-6 md:px-8">
-            <Button size="lg" onClick={closeThen(onSearch)} icon={<Search className="size-5" />}>
+            <ButtonLink href={routes.jobs} size="lg" onClick={onClose} icon={<Search className="size-5" />}>
               Find Jobs
-            </Button>
-            <Button
+            </ButtonLink>
+            <ButtonLink
+              href={routes.myCareers}
               size="lg"
               variant="secondary"
-              onClick={closeThen(onAccount)}
+              onClick={onClose}
               icon={<UserRound className="size-5" />}
             >
               My Careers
-            </Button>
+            </ButtonLink>
           </div>
         </motion.div>
       ) : null}

@@ -1,5 +1,8 @@
-import type { AnchorHTMLAttributes, ButtonHTMLAttributes, ReactNode } from "react";
+import type { ButtonHTMLAttributes, ComponentProps, ReactNode } from "react";
+import Link from "next/link";
 import { cn } from "@/lib/utils";
+
+type LinkProps = Omit<ComponentProps<typeof Link>, "href"> & { href: string };
 
 export type ButtonVariant = "primary" | "accent" | "secondary" | "inverse" | "outline-inverse" | "ghost";
 export type ButtonSize = "md" | "lg";
@@ -78,11 +81,11 @@ export function ButtonLink({
   className,
   children,
   ...props
-}: CommonProps & AnchorHTMLAttributes<HTMLAnchorElement> & { href: string }) {
+}: CommonProps & LinkProps) {
   return (
-    <a className={buttonClasses({ variant, size, className })} {...props}>
+    <Link className={buttonClasses({ variant, size, className })} {...props}>
       <Content icon={icon}>{children}</Content>
-    </a>
+    </Link>
   );
 }
 
@@ -92,9 +95,9 @@ export function TextLink({
   className,
   tone = "dark",
   ...props
-}: AnchorHTMLAttributes<HTMLAnchorElement> & { href: string; tone?: "dark" | "light" }) {
+}: LinkProps & { tone?: "dark" | "light" }) {
   return (
-    <a
+    <Link
       className={cn(
         "group/link inline-flex min-h-11 items-center gap-2 text-label font-semibold underline-offset-[6px] hover:underline",
         tone === "dark" ? "text-primary decoration-accent" : "text-white decoration-accent",
@@ -113,6 +116,6 @@ export function TextLink({
       >
         <path d="M2 8h11M9 4l4 4-4 4" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
-    </a>
+    </Link>
   );
 }

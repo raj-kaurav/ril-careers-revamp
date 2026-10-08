@@ -1,6 +1,8 @@
+import Link from "next/link";
+import { UserRound } from "lucide-react";
 import { Wordmark } from "@/components/brand/Wordmark";
 import { Container } from "@/components/layout/Container";
-import { footerColumns, legalLinks, socialLinks, type SocialPlatform } from "@/data/navigation";
+import { footerColumns, legalLinks, routes, socialLinks, type SocialPlatform } from "@/data/navigation";
 import { site } from "@/data/site";
 
 const socialPaths: Record<SocialPlatform, string> = {
@@ -22,10 +24,17 @@ export function Footer() {
       <Container className="pt-16 pb-10 md:pt-20">
         <div className="layout-grid gap-y-12">
           <div className="col-span-4 md:col-span-8 lg:col-span-4">
-            <a href="#top" aria-label="RIL Careers — back to top" className="inline-block rounded-sm">
+            <Link href={routes.home} aria-label="RIL Careers — home" className="inline-block rounded-sm">
               <Wordmark tone="light" layout="stacked" />
-            </a>
+            </Link>
             <p className="mt-6 max-w-xs text-body-lg text-text-inverse-muted">One Reliance. Many possibilities.</p>
+            <Link
+              href={routes.myCareers}
+              className="mt-6 inline-flex min-h-11 items-center gap-2.5 rounded-md border border-white/20 px-4 text-label font-semibold text-white transition-colors hover:border-white/50"
+            >
+              <UserRound className="size-5" aria-hidden="true" />
+              My Careers
+            </Link>
             <ul className="mt-8 flex gap-2" aria-label="Social media (placeholder links)">
               {socialLinks.map((social) => (
                 <li key={social.platform}>
@@ -53,12 +62,12 @@ export function Footer() {
                 <ul className="mt-5 space-y-1">
                   {column.links.map((link) => (
                     <li key={link.label}>
-                      <a
+                      <Link
                         href={link.href}
                         className="inline-flex min-h-11 items-center text-body text-text-inverse-muted transition-colors hover:text-white"
                       >
                         {link.label}
-                      </a>
+                      </Link>
                     </li>
                   ))}
                 </ul>

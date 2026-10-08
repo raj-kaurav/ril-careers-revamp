@@ -6,6 +6,7 @@ export const site = {
   copyrightYear: 2026,
   legalEntity: "Reliance Industries Limited",
   prototypeNotice: "Design concept for review. Not an official RIL website; all jobs, stories and figures are illustrative.",
+  demoJobsNotice: "Demo roles for this prototype — not live Reliance vacancies.",
 } as const;
 
 export type ProofPoint = {
@@ -29,7 +30,19 @@ export const proofPoints: ProofPoint[] = [
 
 export const proofFootnote = "Indicative figures for this concept — to be confirmed before launch.";
 
-export const popularSearches = ["Data science", "Process engineering", "Retail operations", "Product management"];
+/**
+ * The recruitment platform behind search, job detail, applications and
+ * candidate accounts. Attributed only in those contexts — never as a co-brand
+ * on the homepage. URLs stay null until the HireSphere integration exists.
+ */
+export const hiringPlatform = {
+  name: "HireSphere",
+  description: "Reliance's candidate application platform",
+  applyUrl: null as string | null,
+  accountUrl: null as string | null,
+} as const;
+
+export const popularSearches = ["Technology", "Engineering", "Retail", "AI & Data", "New Energy"];
 
 export type EvpPillar = {
   id: string;
@@ -38,31 +51,31 @@ export type EvpPillar = {
   description: string;
 };
 
+/** Four parallel reasons to choose Reliance — not steps in a sequence. */
 export const evpPillars: EvpPillar[] = [
   {
     id: "scale",
     number: "01",
     title: "Scale that matters",
-    description: "Work on products, infrastructure and services that operate at extraordinary scale.",
+    description: "Work on products, infrastructure and services operating at extraordinary scale.",
   },
   {
     id: "many-worlds",
     number: "02",
-    title: "Many worlds. One career.",
-    description:
-      "Explore opportunities across businesses, technologies and industries as your career evolves.",
+    title: "Many worlds. One ecosystem.",
+    description: "Explore technology, energy, retail, media, new energy and more.",
   },
   {
-    id: "grow",
+    id: "complexity",
     number: "03",
-    title: "Learn. Grow. Lead.",
-    description: "Build capability through learning, mobility, mentorship and meaningful challenges.",
+    title: "Learn through complexity",
+    description: "Solve ambitious problems where technology, business and real-world impact meet.",
   },
   {
-    id: "next",
+    id: "impact",
     number: "04",
-    title: "Build what's next.",
-    description: "Work with teams solving challenges across digital, energy, retail and new energy.",
+    title: "Build meaningful impact",
+    description: "Work on ideas and systems that shape how people live, work and grow.",
   },
 ];
 
@@ -93,9 +106,9 @@ export const hiringSteps: HiringStep[] = [
     description: "Meet our teams through assessments and interviews tailored to the role.",
   },
   {
-    id: "grow",
+    id: "offer-join",
     number: "04",
-    title: "Grow",
-    description: "Join, settle in and keep building your career across Reliance.",
+    title: "Offer & Join",
+    description: "Receive your offer, complete the next steps and start your journey at Reliance.",
   },
 ];

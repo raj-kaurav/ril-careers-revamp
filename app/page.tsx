@@ -5,14 +5,13 @@ import { Footer } from "@/components/footer/Footer";
 import { Hero } from "@/components/hero/Hero";
 import { FeaturedJobs } from "@/components/jobs/FeaturedJobs";
 import { HowWeHire } from "@/components/jobs/HowWeHire";
-import { JobSearchProvider } from "@/components/jobs/JobSearchProvider";
 import { Header } from "@/components/navigation/Header";
 import { CareerPathways } from "@/components/pathways/CareerPathways";
 import { EmployeeStories } from "@/components/stories/EmployeeStories";
 
 export default function HomePage() {
   return (
-    <JobSearchProvider>
+    <>
       <Header />
       <main id="main" tabIndex={-1} className="focus:outline-none">
         <Hero />
@@ -25,6 +24,6 @@ export default function HomePage() {
         <FinalCTA />
       </main>
       <Footer />
-    </JobSearchProvider>
+    </>
   );
 }

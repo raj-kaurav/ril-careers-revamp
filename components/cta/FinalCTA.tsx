@@ -3,8 +3,9 @@ import { ArrowRight } from "lucide-react";
 import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
 import { Reveal } from "@/components/motion/Reveal";
-import { ButtonLink, TextLink } from "@/components/ui/Button";
+import { ButtonLink } from "@/components/ui/Button";
 import { images } from "@/data/images";
+import { routes } from "@/data/navigation";
 
 export function FinalCTA() {
   return (
@@ -39,13 +40,13 @@ export function FinalCTA() {
           <p className="mt-7 max-w-lg text-body-lg text-text-inverse-muted md:text-[1.25rem] md:leading-[1.55]">
             Explore opportunities across one of India&apos;s most diverse business ecosystems.
           </p>
-          <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-8">
-            <ButtonLink href="#search" variant="accent" size="lg" icon={<ArrowRight className="size-5" />}>
+          <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
+            <ButtonLink href={routes.jobs} variant="accent" size="lg" icon={<ArrowRight className="size-5" />}>
               Find jobs
             </ButtonLink>
-            <TextLink href="#pathways" tone="light" className="self-start sm:self-auto">
-              Explore career pathways
-            </TextLink>
+            <ButtonLink href="/#pathways" variant="outline-inverse" size="lg">
+              Explore careers
+            </ButtonLink>
           </div>
         </Reveal>
       </Container>
