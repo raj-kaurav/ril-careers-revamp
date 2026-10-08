@@ -1,26 +1,199 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/*
+ * Design tokens — provisional, RIL-inspired prototype values.
+ * They are NOT official RIL brand specifications; swap these for approved
+ * brand tokens without touching component code.
+ */
+@theme {
+  /* Colour */
+  --color-primary: #171a4a;
+  --color-primary-hover: #292d83;
+  --color-primary-dark: #11143b;
+  --color-accent: #c9a227;
+  --color-accent-strong: #8a6d12; /* gold for text on light surfaces (AA) */
+  --color-accent-secondary: #0b7f83;
+  --color-background: #ffffff;
+  --color-background-muted: #f5f6fa;
+  --color-background-dark: #11143b;
+  --color-surface: #ffffff;
+  --color-text: #171717;
+  --color-text-muted: #666b78;
+  --color-text-inverse-muted: #c3c6dc;
+  --color-border: #e4e6ec;
+  --color-border-dark: rgb(255 255 255 / 0.14);
+  --color-success: #1f7a4d;
+  --color-warning: #b26b00;
+  --color-error: #b42318;
+
+  /* Typography scale */
+  /* 42px on small phones → 76px on wide desktop */
+  --text-display: clamp(2.625rem, 0.5rem + 5vw, 4.75rem);
+  --text-display--line-height: 1.02;
+  --text-display--letter-spacing: -0.04em;
+  --text-display--font-weight: 700;
+
+  --text-h1: clamp(2.5rem, 1.5rem + 3vw, 4rem);
+  --text-h1--line-height: 1.04;
+  --text-h1--letter-spacing: -0.035em;
+  --text-h1--font-weight: 700;
+
+  /* Section headings: 36px mobile → 48px desktop */
+  --text-h2: clamp(2.25rem, 1.6rem + 1.6vw, 3rem);
+  --text-h2--line-height: 1.08;
+  --text-h2--letter-spacing: -0.032em;
+  --text-h2--font-weight: 700;
+
+  /* Card headings: 20px → 24px */
+  --text-h3: clamp(1.25rem, 1.1rem + 0.45vw, 1.5rem);
+  --text-h3--line-height: 1.25;
+  --text-h3--letter-spacing: -0.018em;
+  --text-h3--font-weight: 700;
+
+  /* Editorial statements and feature headings: 30px → 44px */
+  --text-statement: clamp(1.875rem, 1.3rem + 1.6vw, 2.75rem);
+  --text-statement--line-height: 1.1;
+  --text-statement--letter-spacing: -0.03em;
+  --text-statement--font-weight: 700;
+
+  --text-body-lg: 1.125rem;
+  --text-body-lg--line-height: 1.6;
+
+  --text-body: 1rem;
+  --text-body--line-height: 1.65;
+
+  --text-body-sm: 0.875rem;
+  --text-body-sm--line-height: 1.55;
+
+  --text-label: 0.9375rem;
+  --text-label--line-height: 1.4;
+  --text-label--font-weight: 600;
+
+  --text-eyebrow: 0.8125rem;
+  --text-eyebrow--line-height: 1.2;
+  --text-eyebrow--letter-spacing: 0.16em;
+  --text-eyebrow--font-weight: 700;
+
+  /* Radius — restrained, editorial */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+
+  /* Elevation — kept quiet */
+  --shadow-subtle: 0 1px 2px rgb(17 20 59 / 0.05);
+  --shadow-card: 0 1px 2px rgb(17 20 59 / 0.04), 0 12px 32px -20px rgb(17 20 59 / 0.22);
+  --shadow-elevated: 0 1px 2px rgb(17 20 59 / 0.04), 0 32px 64px -40px rgb(17 20 59 / 0.4);
+
+  /* Motion */
+  --ease-premium: cubic-bezier(0.22, 1, 0.36, 1);
+  --duration-fast: 180ms;
+  --duration-base: 320ms;
+  --duration-slow: 700ms;
+
+  /* Layout */
+  --container-content: 80rem;
+  --container-header: 90rem;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-padding-top: 5.5rem;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+
+  body {
+    background: var(--color-background);
+    color: var(--color-text);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  ::selection {
+    background: var(--color-accent);
+    color: var(--color-primary-dark);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent-secondary);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  [data-surface="dark"] :focus-visible {
+    outline-color: var(--color-accent);
+  }
+
+  dialog::backdrop {
+    background: rgb(17 20 59 / 0.55);
+    backdrop-filter: blur(2px);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  .layout-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    column-gap: 1rem;
+  }
+
+  @media (min-width: 48rem) {
+    .layout-grid {
+      grid-template-columns: repeat(8, minmax(0, 1fr));
+      column-gap: 1.5rem;
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .layout-grid {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+    }
+  }
+
+  .eyebrow {
+    font-size: var(--text-eyebrow);
+    line-height: var(--text-eyebrow--line-height);
+    letter-spacing: var(--text-eyebrow--letter-spacing);
+    font-weight: var(--text-eyebrow--font-weight);
+    text-transform: uppercase;
+  }
+}
+
+@utility scrollbar-none {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
